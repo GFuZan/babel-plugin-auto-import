@@ -1,4 +1,4 @@
-# babel-plugin-auto-import
+# babel-plugin-auto-inject
 
 babel 自动引入插件
 
@@ -16,7 +16,7 @@ module.exports = {
   ],
   plugins: [
     [
-      "babel-plugin-auto-import",
+      "babel-plugin-auto-inject",
       {
         m1: `import m1 from '@/common/m1';`,
         m2: `import { m2 } from '@/common/m2';`,

@@ -8,7 +8,7 @@
  *   // 插件配置
  *   plugins: [
  *    [
- *      "babel-plugin-auto-import",
+ *      "babel-plugin-auto-inject",
  *      {
  *        // 添加全局变量 nav, 从 '@/common' 导入
  *        nav: `import { nav } from '@/common';`,

@@ -1,0 +1,17 @@
+{
+  "name": "babel-plugin-auto-import",
+  "version": "1.0.0",
+  "description": "babel 自动引入插件",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GFuZan/babel-plugin-auto-import"
+  },
+  "author": "gfuzan",
+  "license": "ISC",
+  "keywords": [
+    "babel-plugin",
+    "auto-import",
+    "babel-plugin-auto-import"
+  ]
+}

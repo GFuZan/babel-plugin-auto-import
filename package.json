@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-auto-inject",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "babel 自动引入插件",
   "main": "index.js",
   "repository": {

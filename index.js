@@ -2,8 +2,8 @@
  * 自动引入插件
  * @param {import('@babel/core')} babel
  * @param {{ [K: string]: string }} options
- * @returns {{ visitor: import('@babel/core').Visitor }} 插件对象
- *@example
+ * @returns {import('@babel/core').PluginObj} 插件对象
+ * @example
  * ```js
  *   // 插件配置
  *   plugins: [
@@ -20,43 +20,38 @@
  * ```
  */
 const plugin = function (babel, options = {}) {
+  const isBabel6 = babel.version.split(".")[0] === "6";
+  const { template } = babel;
+  const emptyObj = {};
+  const getAst = isBabel6
+    ? (code) => template(code, { sourceType: "module" })()
+    : (code) => template.ast(code);
+
   return {
     visitor: {
-      Program(path, state) {
-        path.traverse(traverseOptions, {
-          importsAdded: new Set(),
-          rootPath: path,
-          options: state.opts || options,
-          babel,
-        });
+      Program: {
+        enter(path, state) {
+          state.rootPath = path;
+          state.importsAdded = new Set();
+        },
+      },
+      Identifier(innerPath, state) {
+        const { importsAdded, rootPath } = state;
+        const opts = state.opts || options;
+        const { name } = innerPath.node;
+        const importValue = !emptyObj[name] && opts[name];
+        if (
+          importValue &&
+          !importsAdded.has(name) &&
+          !innerPath.scope.hasBinding(name) &&
+          innerPath.key !== "property"
+        ) {
+          importsAdded.add(name);
+          rootPath.node.body.unshift(getAst(importValue));
+        }
       },
     },
   };
-};
-
-/**
- * @type {import('@babel/core').Visitor}
- */
-const traverseOptions = {
-  Identifier(innerPath, state) {
-    const {
-      importsAdded,
-      rootPath,
-      options,
-      babel: { template, types: t },
-    } = state;
-    const { name } = innerPath.node;
-    const importValue = options[name];
-    if (
-      importValue &&
-      !importsAdded.has(name) &&
-      !innerPath.scope.hasBinding(name) &&
-      innerPath.key !== "property"
-    ) {
-      importsAdded.add(name);
-      rootPath.node.body.unshift(template.ast(importValue));
-    }
-  },
 };
 
 module.exports = plugin;
